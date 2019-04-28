@@ -14,12 +14,6 @@ go build -o xdebug-trace-performance-checker main.go
 xdebug-trace-performance-checker debug.xt 0.1
 ```
 
-Using Docker
-
-```
-docker run -it $(docker build -q .) -v $PWD:/app debug.xt 0.1
-```
-
 ## LICENSE
 
 MIT

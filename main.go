@@ -11,6 +11,9 @@ import (
 func main() {
 	var fp *os.File
 	var err error
+	if len(os.Args) < 3 {
+		panic("invaild args.")
+	}
 
 	// filename
 	fileName := os.Args[1]
