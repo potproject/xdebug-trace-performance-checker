@@ -4,7 +4,11 @@ PHP xdebug auto_trace Perfomance checking tool
 
 ## Usage
 
-Using Golang
+### Download binary
+
+Releases
+
+### Using Golang
 
 ```sh
 go build -o xdebug-trace-performance-checker main.go
