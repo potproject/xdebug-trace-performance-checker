@@ -15,6 +15,8 @@ type Trace struct {
 	usedMemory int64   // 全体使用しているメモリ
 	depth      int     // 変数の深さ。rootの場合は1
 	method     string  // メソッド情報
+	filePath   string  // ファイルパス
+	line       int64   // 行数
 }
 
 func main() {
@@ -59,7 +61,9 @@ func parseTrace(lines []string) (traces []Trace) {
 		// group[2] = メモリ使用量
 		// group[3] = 空白 初回:3 で以降2ずつ増える
 		// group[4] = メソッド
-		assined := regexp.MustCompile(`\s+(\d+\.\d+)\s+(\d+)(\s+)(.+)`)
+		// group[5] = ファイルパス
+		// group[6] = 行数
+		assined := regexp.MustCompile(`\s+(\d+\.\d+)\s+(\d+)(\s+)->\s(\S+)\s([^:]+):(\d+)`)
 		group := assined.FindSubmatch([]byte(word))
 		if len(group) < 5 {
 			continue
@@ -68,11 +72,15 @@ func parseTrace(lines []string) (traces []Trace) {
 		usedMemory, _ := strconv.ParseInt(string(group[2]), 10, 64)
 		depth := depthCount(string(group[3]))
 		method := string(group[4])
+		filePath := string(group[5])
+		line, _ := strconv.ParseInt(string(group[6]), 10, 64)
 		t := Trace{
 			time:       time,
 			usedMemory: usedMemory,
 			depth:      depth,
 			method:     method,
+			filePath:   filePath,
+			line:       line,
 		}
 		traces = append(traces, t)
 	}
@@ -115,7 +123,7 @@ func getStacktrace(traces []Trace, index int) (stackTraces []Trace) {
 			stackTraces = append(stackTraces, traces[i])
 			beforeDepth = traces[i].depth
 		}
-		if beforeDepth == 1 {
+		if beforeDepth == 0 {
 			return
 		}
 	}
