@@ -86,3 +86,21 @@ func TestParseTraceIrregular(t *testing.T) {
 		t.Errorf("parseTrace() = %v, want %v", result, actual)
 	}
 }
+
+func TestGetStacktrace(t *testing.T) {
+	argsTrace := []Trace{
+		Trace{time: 0.005, usedMemory: 68952, depth: 0, method: "{main}()", filePath: "/var/www/test.php", line: 0},
+		Trace{time: 0.01, usedMemory: 240056, depth: 1, method: "include(/var/www/test2.php)", filePath: "/var/www/test.php", line: 3},
+		Trace{time: 0.0295, usedMemory: 409624, depth: 1, method: "test()", filePath: "/var/www/test.php", line: 6},
+		Trace{time: 0.1962, usedMemory: 410440, depth: 2, method: "foo()", filePath: "/var/www/test2.php", line: 10},
+		Trace{time: 0.3201, usedMemory: 410472, depth: 1, method: "test2()", filePath: "/var/www/test.php", line: 7},
+		Trace{time: 0.3211, usedMemory: 410568, depth: 2, method: "bar()", filePath: "/var/www/test2.php", line: 24},
+	}
+	argsIndex := 3
+
+	expect := []Trace{argsTrace[3], argsTrace[2], argsTrace[0]}
+	actual := getStacktrace(argsTrace, argsIndex)
+	if !reflect.DeepEqual(actual, expect) {
+		t.Errorf("getStacktrace() = %v, want %v", actual, expect)
+	}
+}

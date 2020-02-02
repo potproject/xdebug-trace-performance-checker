@@ -117,6 +117,7 @@ func getLines(fp *os.File) (lines []string, err error) {
 
 }
 func getStacktrace(traces []Trace, index int) (stackTraces []Trace) {
+	stackTraces = append(stackTraces, traces[index])
 	beforeDepth := traces[index].depth
 	for i := index; i > -1; i-- {
 		if traces[i].depth < beforeDepth {
