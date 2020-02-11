@@ -97,6 +97,9 @@ func depthPadding(depth int) string {
 	return strings.Repeat(" ", 3+(depth*2))
 }
 
+// getParams
+// Args[1]: fileName
+// Args[2]: times
 func getParams(args []string) (fileName string, times float64, err error) {
 	// filename
 	fileName = args[1]
@@ -119,13 +122,10 @@ func getLines(fp *os.File) (lines []string, err error) {
 func getStacktrace(traces []Trace, index int) (stackTraces []Trace) {
 	stackTraces = append(stackTraces, traces[index])
 	beforeDepth := traces[index].depth
-	for i := index; i > -1; i-- {
+	for i := index; i > -1 && beforeDepth > 0; i-- {
 		if traces[i].depth < beforeDepth {
 			stackTraces = append(stackTraces, traces[i])
 			beforeDepth = traces[i].depth
-		}
-		if beforeDepth == 0 {
-			return
 		}
 	}
 	return
